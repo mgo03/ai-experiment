@@ -1,25 +1,24 @@
 'use client';
 import Image from 'next/image';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import {useDragAndDrop} from '@/hooks/useDragAndDrop';
 import {useOcr} from '@/hooks/useOcr';
+import {OcrResultContext} from '@/hooks/useOcrResultContext';
 
 type DropzoneProps = {};
 
 const Dropzone = (props: DropzoneProps) => {
+  const {setOcrResult} = useContext(OcrResultContext);
   const {handleOcr} = useOcr();
   const {imageSrc, isDragOver, handleDragEnter, handleDragLeave, handleDrop} =
     useDragAndDrop();
-
-  // これは別のファイルで実装する
-  const [ocrResult, setOcrResult] = useState<string | null>(null);
 
   const onOcrProcess = useCallback(async () => {
     if (!imageSrc) return;
 
     const result = await handleOcr(imageSrc);
     setOcrResult(result);
-  }, [imageSrc, handleOcr]);
+  }, [imageSrc, handleOcr, setOcrResult]);
 
   return (
     <>
